@@ -150,22 +150,20 @@ npm test
 Experience all features live at: **[Kohort EMS](https://kloudspot-project-red.vercel.app/)**
 
 ### 🎥 Demo Video & Screen Recordings
-<!-- Add your video clip / screen recording link or embed directly below: -->
-> 📹 *Demo clip / video walkthrough will be added here directly.*
 
-### ✨ Key Features & System Tour
+Logn and bulk load | deleting a data 
+--------|---------
+https://github.com/user-attachments/assets/2a42e2df-713f-4498-8b30-4199ddced717| https://github.com/user-attachments/assets/40b38a2d-5aa7-46de-81d9-868139dfcbe1
 
-| Feature | Key Highlights |
-| :--- | :--- |
-| **Authentication & Theme** | JWT security, BCrypt hashing, one-click Auto-fill Demo Credentials, and seamless Baby Pink (Light) & Midnight Obsidian (Dark) themes. |
-| **Employee Directory** | Live server-side search across ID/Name/Email, multi-criteria filtering by department and status, server-side pagination, and dual CSV & Excel (`.xlsx`) export. |
-| **Bulk Excel / CSV Import** | Drag-and-drop file upload with an interactive staging review modal, real-time error detection (duplicates, invalid Indian +91 numbers, future dates), and inline cell editing before saving. |
-| **Profile & Audit Trail** | Detailed employee card, department assignment, and a complete historical timeline logging who created, updated, archived, or restored each record. |
-| **13-Day Retention Archive** | Dedicated archive screen with real-time retention countdown timer, one-click restoration, and automated 13-day purge. |
-| **Department Management** | Division oversight with live employee headcount aggregation and referential integrity protection (blocks deleting departments with active staff). |
-| **Real-Time Salary in Words** | Dynamic conversion of compensation figures into Indian English words (e.g., `1250000` → *"Twelve Lakh Fifty Thousand Rupees"*). |
 
----
+SCREENSHOTS
+
+
+Adding data manually | Supabase data
+------ | -----
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/22339ce8-79ff-4e91-b36c-1f010dcfbf73" /> | <img width="1058" height="627" alt="image" src="https://github.com/user-attachments/assets/191fac86-ab85-46b5-a6d6-791c8deb71f6" />
+
+
 
 ## 📬 Postman Collection
 
