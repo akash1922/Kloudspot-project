@@ -9,8 +9,6 @@ A full-stack Employee Management System built with Spring Boot, PostgreSQL (Supa
 * 🚀 **Live Web Application**: [Kohort EMS](https://kloudspot-project-red.vercel.app/) *(Click to open live deployed app)*
 * 📖 **Live Interactive Swagger API Docs**: [Swagger UI](https://kloudspot-project.onrender.com/swagger-ui.html)
 * ⚡ **Live Backend Health Status**: [Render Health Endpoint](https://kloudspot-project.onrender.com/)
-* 🧪 **Automated Testing & TTL Verification**: [TESTING.md](TESTING.md) *(18 Backend + 17 Frontend = 35 tests, plus TTL SQL queries)*
-* 📸 **Screenshots & Visual Showcase**: [DEMO.md](DEMO.md) *(Feature tour, themes, and screen recording demonstrations)*
 
 ---
 
@@ -119,11 +117,11 @@ Use the pre-seeded administrator credentials to log in:
 
 The project includes **35 automated tests** across both backend and frontend layers (100% passing):
 
-| Layer | Framework | Tests | Status |
-| :--- | :--- | :---: | :---: |
-| **Backend Service Layer** | JUnit 5 + Mockito | 18 | Passing |
-| **Frontend Utilities & UI** | Vitest + React Testing Library | 17 | Passing |
-| **Total Automated Tests** | | **35** | **100% Passing** |
+| Layer | Framework | Tests | Scope | Status |
+| :--- | :--- | :---: | :--- | :---: |
+| **Backend Service Layer** | JUnit 5 + Mockito | 18 | Business logic, CRUD, validation, 13-day TTL rules, CSV export | ✅ Passing |
+| **Frontend Utilities & UI** | Vitest + React Testing Library | 17 | Date & currency formatting, number-to-words, UI badges, pagination | ✅ Passing |
+| **Total Automated Tests** | | **35** | Complete test coverage | ✅ **100% Passing** |
 
 ### 1. Run Backend Tests (18 Tests)
 ```bash
@@ -142,15 +140,30 @@ cd frontend
 npm test
 ```
 
-> 📖 **Full Testing & Verification Guide**:  
-> For the comprehensive test suite breakdown, Mockito coverage, and the **SQL queries to test the 13-day TTL archive auto-purge**, see **[TESTING.md](TESTING.md)**.
+> 📖 **Full Testing & 13-Day TTL Verification Guide**:  
+> For the comprehensive test class breakdown, Mockito mocks, and the step-by-step **13-Day TTL Archive Auto-Purge SQL queries**, see the **[Contributing Tab (CONTRIBUTING.md)](CONTRIBUTING.md)** (rendered right beside this README tab on GitHub).
 
 ---
 
-## 📸 Screenshots & Screen Recordings
+## 📸 Visual Showcase & Screen Recordings
 
-To view visual walkthroughs of the application, including the light/dark mode theme, bulk Excel staging modal, audit logs, and screen recordings:
-👉 **See [DEMO.md](DEMO.md)**
+Experience all features live at: **[Kohort EMS](https://kloudspot-project-red.vercel.app/)**
+
+### 🎥 Demo Video & Screen Recordings
+<!-- Add your video clip / screen recording link or embed directly below: -->
+> 📹 *Demo clip / video walkthrough will be added here directly.*
+
+### ✨ Key Features & System Tour
+
+| Feature | Key Highlights |
+| :--- | :--- |
+| **Authentication & Theme** | JWT security, BCrypt hashing, one-click Auto-fill Demo Credentials, and seamless Baby Pink (Light) & Midnight Obsidian (Dark) themes. |
+| **Employee Directory** | Live server-side search across ID/Name/Email, multi-criteria filtering by department and status, server-side pagination, and dual CSV & Excel (`.xlsx`) export. |
+| **Bulk Excel / CSV Import** | Drag-and-drop file upload with an interactive staging review modal, real-time error detection (duplicates, invalid Indian +91 numbers, future dates), and inline cell editing before saving. |
+| **Profile & Audit Trail** | Detailed employee card, department assignment, and a complete historical timeline logging who created, updated, archived, or restored each record. |
+| **13-Day Retention Archive** | Dedicated archive screen with real-time retention countdown timer, one-click restoration, and automated 13-day purge. |
+| **Department Management** | Division oversight with live employee headcount aggregation and referential integrity protection (blocks deleting departments with active staff). |
+| **Real-Time Salary in Words** | Dynamic conversion of compensation figures into Indian English words (e.g., `1250000` → *"Twelve Lakh Fifty Thousand Rupees"*). |
 
 ---
 
@@ -163,4 +176,5 @@ A pre-configured Postman collection is included in the repository at:
 1. Open Postman → Click **Import** → Choose the collection file.
 2. Execute the **Login (Admin)** request first — it automatically sets the authorization token for all subsequent requests.
 3. Test any employee or department endpoint.
+
 
