@@ -1,0 +1,101 @@
+employeeId,fullName,email,phoneNumber,department,designation,dateOfJoining,salary,status
+EMP1001,"Ayaan Chopra",ayaan.chopra.1001@kohort.com,9810000837,"Product & Design","UI/UX Architect",2022-02-02,46250,Active
+EMP1002,"Advaith Bhatia",advaith.bhatia.1002@kohort.com,9810001674,"Human Resources","HR Generalist",2023-03-03,47500,Active
+EMP1003,"Saanvi Sen",saanvi.sen.1003@kohort.com,9810002511,"Marketing & Sales","Sales Development Rep",2024-04-04,48750,Active
+EMP1004,"Ira Deshmukh",ira.deshmukh.1004@kohort.com,9810003348,"Finance & Legal","Financial Analyst",2021-05-05,50000,Active
+EMP1005,"Anaya Joshi",anaya.joshi.1005@kohort.com,9810004185,"Engineering","Full Stack Dev",2022-06-06,51250,Active
+EMP1006,"Sameer Das",sameer.das.1006@kohort.com,9810005022,"Product & Design","Product Manager",2023-07-07,52500,Active
+EMP1007,"Tanvi Kulkarni",tanvi.kulkarni.1007@kohort.com,9810005859,"Human Resources","People Operations Partner",2024-08-08,53750,Active
+EMP1008,"Reyansh Patel",reyansh.patel.1008@kohort.com,9810006696,"Marketing & Sales","Growth Marketer",2021-09-09,55000,Active
+EMP1009,"Pranav Kumar",pranav.kumar.1009@kohort.com,9810007533,"Finance & Legal","Senior Accountant",2022-10-10,56250,Active
+EMP1010,"Diya Rao",diya.rao.1010@kohort.com,9810008370,"Engineering","QA Engineer",2023-11-11,57500,Active
+EMP1011,"Angel Mehta",angel.mehta.1011@kohort.com,9810009207,"Product & Design","Associate PM",2024-12-12,58750,Active
+EMP1012,"Aditi Singh",aditi.singh.1012@kohort.com,9810010044,"Human Resources","HR Executive",2021-01-13,60000,Active
+EMP1013,"Vikram Iyer",vikram.iyer.1013@kohort.com,9810010881,"Marketing & Sales","Content Strategist",2022-02-14,61250,Active
+EMP1014,"Shreya Gupta",shreya.gupta.1014@kohort.com,9810011718,"Finance & Legal","Compliance Specialist",2023-03-15,62500,Active
+EMP1015,"Sai Kapoor",sai.kapoor.1015@kohort.com,9810012555,"Engineering","DevOps Specialist",2024-04-16,63750,Inactive
+EMP1016,"Advik Nair",advik.nair.1016@kohort.com,9810013392,"Product & Design","Product Designer",2021-05-17,65000,Active
+EMP1017,"Darsh Verma",darsh.verma.1017@kohort.com,9810014229,"Human Resources","Talent Acquisition Lead",2022-06-18,66250,Active
+EMP1018,"Navya Malhotra",navya.malhotra.1018@kohort.com,9810015066,"Marketing & Sales","Account Executive",2023-07-19,67500,Active
+EMP1019,"Prisha Reddy",prisha.reddy.1019@kohort.com,9810015903,"Finance & Legal","Billing Manager",2024-08-20,68750,Active
+EMP1020,"Rohan Sharma",rohan.sharma.1020@kohort.com,9810016740,"Engineering","Frontend Engineer",2021-09-21,70000,Active
+EMP1021,"Sneha Chopra",sneha.chopra.1021@kohort.com,9810017577,"Product & Design","UI/UX Architect",2022-10-22,71250,Active
+EMP1022,"Arjun Bhatia",arjun.bhatia.1022@kohort.com,9810018414,"Human Resources","HR Generalist",2023-11-23,72500,Active
+EMP1023,"Atharv Sen",atharv.sen.1023@kohort.com,9810019251,"Marketing & Sales","Sales Development Rep",2024-12-24,73750,Active
+EMP1024,"Ritvik Deshmukh",ritvik.deshmukh.1024@kohort.com,9810020088,"Finance & Legal","Financial Analyst",2021-01-25,75000,Active
+EMP1025,"Anika Joshi",anika.joshi.1025@kohort.com,9810020925,"Engineering","Senior Backend Dev",2022-02-26,76250,Active
+EMP1026,"Avani Das",avani.das.1026@kohort.com,9810021762,"Product & Design","Product Manager",2023-03-27,77500,Active
+EMP1027,"Kavya Kulkarni",kavya.kulkarni.1027@kohort.com,9810022599,"Human Resources","People Operations Partner",2024-04-28,78750,Active
+EMP1028,"Neha Patel",neha.patel.1028@kohort.com,9810023436,"Marketing & Sales","Growth Marketer",2021-05-01,80000,Active
+EMP1029,"Vihaan Kumar",vihaan.kumar.1029@kohort.com,9810024273,"Finance & Legal","Senior Accountant",2022-06-02,81250,Active
+EMP1030,"Shaurya Rao",shaurya.rao.1030@kohort.com,9810025110,"Engineering","Software Engineer",2023-07-03,82500,Inactive
+EMP1031,"Kabir Mehta",kabir.mehta.1031@kohort.com,9810025947,"Product & Design","Associate PM",2024-08-04,83750,Active
+EMP1032,"Pari Singh",pari.singh.1032@kohort.com,9810026784,"Human Resources","HR Executive",2021-09-05,85000,Active
+EMP1033,"Riya Iyer",riya.iyer.1033@kohort.com,9810027621,"Marketing & Sales","Content Strategist",2022-10-06,86250,Active
+EMP1034,"Sara Gupta",sara.gupta.1034@kohort.com,9810028458,"Finance & Legal","Compliance Specialist",2023-11-07,87500,Active
+EMP1035,"Pooja Kapoor",pooja.kapoor.1035@kohort.com,9810029295,"Engineering","Full Stack Dev",2024-12-08,88750,Active
+EMP1036,"Aditya Nair",aditya.nair.1036@kohort.com,9810030132,"Product & Design","Product Designer",2021-01-09,90000,Active
+EMP1037,"Ishaan Verma",ishaan.verma.1037@kohort.com,9810030969,"Human Resources","Talent Acquisition Lead",2022-02-10,91250,Active
+EMP1038,"Dhruv Malhotra",dhruv.malhotra.1038@kohort.com,9810031806,"Marketing & Sales","Account Executive",2023-03-11,92500,Active
+EMP1039,"Aadhya Reddy",aadhya.reddy.1039@kohort.com,9810032643,"Finance & Legal","Billing Manager",2024-04-12,93750,Active
+EMP1040,"Siya Sharma",siya.sharma.1040@kohort.com,9810033480,"Engineering","QA Engineer",2021-05-13,95000,Active
+EMP1041,"Meera Chopra",meera.chopra.1041@kohort.com,9810034317,"Product & Design","UI/UX Architect",2022-06-14,96250,Active
+EMP1042,"Nikhil Bhatia",nikhil.bhatia.1042@kohort.com,9810035154,"Human Resources","HR Generalist",2023-07-15,97500,Active
+EMP1043,"Vivaan Sen",vivaan.sen.1043@kohort.com,9810035991,"Marketing & Sales","Sales Development Rep",2024-08-16,98750,Active
+EMP1044,"Krishna Deshmukh",krishna.deshmukh.1044@kohort.com,9810036828,"Finance & Legal","Financial Analyst",2021-09-17,100000,Active
+EMP1045,"Aaryan Joshi",aaryan.joshi.1045@kohort.com,9810037665,"Engineering","DevOps Specialist",2022-10-18,101250,Inactive
+EMP1046,"Ananya Das",ananya.das.1046@kohort.com,9810038502,"Product & Design","Product Manager",2023-11-19,102500,Active
+EMP1047,"Myra Kulkarni",myra.kulkarni.1047@kohort.com,9810039339,"Human Resources","People Operations Partner",2024-12-20,103750,Active
+EMP1048,"Aarohi Patel",aarohi.patel.1048@kohort.com,9810040176,"Marketing & Sales","Growth Marketer",2021-01-21,105000,Active
+EMP1049,"Karan Kumar",karan.kumar.1049@kohort.com,9810041013,"Finance & Legal","Senior Accountant",2022-02-22,106250,Active
+EMP1050,"Aarav Rao",aarav.rao.1050@kohort.com,9810041850,"Engineering","Frontend Engineer",2023-03-23,107500,Active
+EMP1051,"Ayaan Mehta",ayaan.mehta.1051@kohort.com,9810042687,"Product & Design","Associate PM",2024-04-24,108750,Active
+EMP1052,"Advaith Singh",advaith.singh.1052@kohort.com,9810043524,"Human Resources","HR Executive",2021-05-25,110000,Active
+EMP1053,"Saanvi Iyer",saanvi.iyer.1053@kohort.com,9810044361,"Marketing & Sales","Content Strategist",2022-06-26,111250,Active
+EMP1054,"Ira Gupta",ira.gupta.1054@kohort.com,9810045198,"Finance & Legal","Compliance Specialist",2023-07-27,112500,Active
+EMP1055,"Anaya Kapoor",anaya.kapoor.1055@kohort.com,9810046035,"Engineering","Senior Backend Dev",2024-08-28,113750,Active
+EMP1056,"Sameer Nair",sameer.nair.1056@kohort.com,9810046872,"Product & Design","Product Designer",2021-09-01,115000,Active
+EMP1057,"Tanvi Verma",tanvi.verma.1057@kohort.com,9810047709,"Human Resources","Talent Acquisition Lead",2022-10-02,116250,Active
+EMP1058,"Reyansh Malhotra",reyansh.malhotra.1058@kohort.com,9810048546,"Marketing & Sales","Account Executive",2023-11-03,117500,Active
+EMP1059,"Pranav Reddy",pranav.reddy.1059@kohort.com,9810049383,"Finance & Legal","Billing Manager",2024-12-04,118750,Active
+EMP1060,"Diya Sharma",diya.sharma.1060@kohort.com,9810050220,"Engineering","Software Engineer",2021-01-05,120000,Inactive
+EMP1061,"Angel Chopra",angel.chopra.1061@kohort.com,9810051057,"Product & Design","UI/UX Architect",2022-02-06,121250,Active
+EMP1062,"Aditi Bhatia",aditi.bhatia.1062@kohort.com,9810051894,"Human Resources","HR Generalist",2023-03-07,122500,Active
+EMP1063,"Vikram Sen",vikram.sen.1063@kohort.com,9810052731,"Marketing & Sales","Sales Development Rep",2024-04-08,123750,Active
+EMP1064,"Shreya Deshmukh",shreya.deshmukh.1064@kohort.com,9810053568,"Finance & Legal","Financial Analyst",2021-05-09,125000,Active
+EMP1065,"Sai Joshi",sai.joshi.1065@kohort.com,9810054405,"Engineering","Full Stack Dev",2022-06-10,126250,Active
+EMP1066,"Advik Das",advik.das.1066@kohort.com,9810055242,"Product & Design","Product Manager",2023-07-11,127500,Active
+EMP1067,"Darsh Kulkarni",darsh.kulkarni.1067@kohort.com,9810056079,"Human Resources","People Operations Partner",2024-08-12,128750,Active
+EMP1068,"Navya Patel",navya.patel.1068@kohort.com,9810056916,"Marketing & Sales","Growth Marketer",2021-09-13,130000,Active
+EMP1069,"Prisha Kumar",prisha.kumar.1069@kohort.com,9810057753,"Finance & Legal","Senior Accountant",2022-10-14,131250,Active
+EMP1070,"Rohan Rao",rohan.rao.1070@kohort.com,9810058590,"Engineering","QA Engineer",2023-11-15,132500,Active
+EMP1071,"Sneha Mehta",sneha.mehta.1071@kohort.com,9810059427,"Product & Design","Associate PM",2024-12-16,133750,Active
+EMP1072,"Arjun Singh",arjun.singh.1072@kohort.com,9810060264,"Human Resources","HR Executive",2021-01-17,135000,Active
+EMP1073,"Atharv Iyer",atharv.iyer.1073@kohort.com,9810061101,"Marketing & Sales","Content Strategist",2022-02-18,136250,Active
+EMP1074,"Ritvik Gupta",ritvik.gupta.1074@kohort.com,9810061938,"Finance & Legal","Compliance Specialist",2023-03-19,137500,Active
+EMP1075,"Anika Kapoor",anika.kapoor.1075@kohort.com,9810062775,"Engineering","DevOps Specialist",2024-04-20,138750,Inactive
+EMP1076,"Avani Nair",avani.nair.1076@kohort.com,9810063612,"Product & Design","Product Designer",2021-05-21,140000,Active
+EMP1077,"Kavya Verma",kavya.verma.1077@kohort.com,9810064449,"Human Resources","Talent Acquisition Lead",2022-06-22,141250,Active
+EMP1078,"Neha Malhotra",neha.malhotra.1078@kohort.com,9810065286,"Marketing & Sales","Account Executive",2023-07-23,142500,Active
+EMP1079,"Vihaan Reddy",vihaan.reddy.1079@kohort.com,9810066123,"Finance & Legal","Billing Manager",2024-08-24,143750,Active
+EMP1080,"Shaurya Sharma",shaurya.sharma.1080@kohort.com,9810066960,"Engineering","Frontend Engineer",2021-09-25,145000,Active
+EMP1081,"Kabir Chopra",kabir.chopra.1081@kohort.com,9810067797,"Product & Design","UI/UX Architect",2022-10-26,146250,Active
+EMP1082,"Pari Bhatia",pari.bhatia.1082@kohort.com,9810068634,"Human Resources","HR Generalist",2023-11-27,147500,Active
+EMP1083,"Riya Sen",riya.sen.1083@kohort.com,9810069471,"Marketing & Sales","Sales Development Rep",2024-12-28,148750,Active
+EMP1084,"Sara Deshmukh",sara.deshmukh.1084@kohort.com,9810070308,"Finance & Legal","Financial Analyst",2021-01-01,150000,Active
+EMP1085,"Pooja Joshi",pooja.joshi.1085@kohort.com,9810071145,"Engineering","Senior Backend Dev",2022-02-02,151250,Active
+EMP1086,"Aditya Das",aditya.das.1086@kohort.com,9810071982,"Product & Design","Product Manager",2023-03-03,152500,Active
+EMP1087,"Ishaan Kulkarni",ishaan.kulkarni.1087@kohort.com,9810072819,"Human Resources","People Operations Partner",2024-04-04,153750,Active
+EMP1088,"Dhruv Patel",dhruv.patel.1088@kohort.com,9810073656,"Marketing & Sales","Growth Marketer",2021-05-05,155000,Active
+EMP1089,"Aadhya Kumar",aadhya.kumar.1089@kohort.com,9810074493,"Finance & Legal","Senior Accountant",2022-06-06,156250,Active
+EMP1090,"Siya Rao",siya.rao.1090@kohort.com,9810075330,"Engineering","Software Engineer",2023-07-07,157500,Inactive
+EMP1091,"Meera Mehta",meera.mehta.1091@kohort.com,9810076167,"Product & Design","Associate PM",2024-08-08,158750,Active
+EMP1092,"Nikhil Singh",nikhil.singh.1092@kohort.com,9810077004,"Human Resources","HR Executive",2021-09-09,160000,Active
+EMP1093,"Vivaan Iyer",vivaan.iyer.1093@kohort.com,9810077841,"Marketing & Sales","Content Strategist",2022-10-10,161250,Active
+EMP1094,"Krishna Gupta",krishna.gupta.1094@kohort.com,9810078678,"Finance & Legal","Compliance Specialist",2023-11-11,162500,Active
+EMP1095,"Aaryan Kapoor",aaryan.kapoor.1095@kohort.com,9810079515,"Engineering","Full Stack Dev",2024-12-12,163750,Active
+EMP1096,"Ananya Nair",ananya.nair.1096@kohort.com,9810080352,"Product & Design","Product Designer",2021-01-13,165000,Active
+EMP1097,"Myra Verma",myra.verma.1097@kohort.com,9810081189,"Human Resources","Talent Acquisition Lead",2022-02-14,166250,Active
+EMP1098,"Aarohi Malhotra",aarohi.malhotra.1098@kohort.com,9810082026,"Marketing & Sales","Account Executive",2023-03-15,167500,Active
+EMP1099,"Karan Reddy",karan.reddy.1099@kohort.com,9810082863,"Finance & Legal","Billing Manager",2024-04-16,168750,Active
+EMP1100,"Aarav Sharma",aarav.sharma.1100@kohort.com,9810083700,"Engineering","QA Engineer",2021-05-17,170000,Active

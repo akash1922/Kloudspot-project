@@ -1,9 +1,14 @@
 import React from 'react';
 
-export const StatusBadge = ({ status }) => {
+export const StatusBadge = ({ status, onClick, clickable = false }) => {
   const isActive = status === 'Active';
   return (
-    <span className={`badge ${isActive ? 'badge-active' : 'badge-inactive'}`}>
+    <span
+      className={`badge ${isActive ? 'badge-active' : 'badge-inactive'} ${clickable ? 'badge-interactive' : ''}`}
+      onClick={onClick}
+      title={clickable ? `Click to toggle status to ${isActive ? 'Inactive' : 'Active'}` : undefined}
+      style={{ cursor: clickable ? 'pointer' : 'default' }}
+    >
       <span
         style={{
           width: '6px',
@@ -12,7 +17,7 @@ export const StatusBadge = ({ status }) => {
           backgroundColor: isActive ? 'var(--success)' : 'var(--danger)',
         }}
       />
-      {status}
+      <span>{status}</span>
     </span>
   );
 };

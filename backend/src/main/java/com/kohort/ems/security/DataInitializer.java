@@ -42,6 +42,28 @@ public class DataInitializer implements CommandLineRunner {
         seedAdminUser();
         seedDepartments();
         seedSampleEmployees();
+        normalizeLegacyPhoneNumbers();
+    }
+
+    private void normalizeLegacyPhoneNumbers() {
+        try {
+            List<Employee> all = employeeRepository.findAll();
+            boolean changed = false;
+            long seq = 1001;
+            for (Employee emp : all) {
+                String p = emp.getPhoneNumber();
+                if (p != null && (p.contains("555") || p.startsWith("+1"))) {
+                    emp.setPhoneNumber("+91 98" + String.format("%08d", seq++));
+                    changed = true;
+                }
+            }
+            if (changed) {
+                employeeRepository.saveAll(all);
+                log.info("Normalized legacy seed phone numbers to valid Indian format (+91 98xxxxxxxx).");
+            }
+        } catch (Exception e) {
+            log.warn("Could not normalize legacy phone numbers: {}", e.getMessage());
+        }
     }
 
     private void seedAdminUser() {
@@ -82,7 +104,7 @@ public class DataInitializer implements CommandLineRunner {
                                 .employeeId("EMP-1001")
                                 .fullName("Alexander Wright")
                                 .email("alexander.wright@company.com")
-                                .phoneNumber("+1 (555) 234-5678")
+                                .phoneNumber("+91 9823456781")
                                 .department(eng)
                                 .designation("Lead Software Architect")
                                 .dateOfJoining(LocalDate.of(2022, 3, 15))
@@ -93,7 +115,7 @@ public class DataInitializer implements CommandLineRunner {
                                 .employeeId("EMP-1002")
                                 .fullName("Elena Rostova")
                                 .email("elena.rostova@company.com")
-                                .phoneNumber("+1 (555) 345-6789")
+                                .phoneNumber("+91 9834567892")
                                 .department(prod)
                                 .designation("Principal Product Designer")
                                 .dateOfJoining(LocalDate.of(2022, 6, 1))
@@ -104,7 +126,7 @@ public class DataInitializer implements CommandLineRunner {
                                 .employeeId("EMP-1003")
                                 .fullName("Marcus Chen")
                                 .email("marcus.chen@company.com")
-                                .phoneNumber("+1 (555) 456-7890")
+                                .phoneNumber("+91 9845678903")
                                 .department(eng)
                                 .designation("Senior Backend Engineer")
                                 .dateOfJoining(LocalDate.of(2023, 1, 10))
@@ -115,7 +137,7 @@ public class DataInitializer implements CommandLineRunner {
                                 .employeeId("EMP-1004")
                                 .fullName("Sophia Morales")
                                 .email("sophia.morales@company.com")
-                                .phoneNumber("+1 (555) 567-8901")
+                                .phoneNumber("+91 9856789014")
                                 .department(hr)
                                 .designation("People Operations Lead")
                                 .dateOfJoining(LocalDate.of(2021, 9, 20))
@@ -126,7 +148,7 @@ public class DataInitializer implements CommandLineRunner {
                                 .employeeId("EMP-1005")
                                 .fullName("Liam O'Connor")
                                 .email("liam.oconnor@company.com")
-                                .phoneNumber("+1 (555) 678-9012")
+                                .phoneNumber("+91 9867890125")
                                 .department(eng)
                                 .designation("DevOps Engineer")
                                 .dateOfJoining(LocalDate.of(2023, 8, 14))
@@ -135,7 +157,7 @@ public class DataInitializer implements CommandLineRunner {
                                 .build()
                 );
                 employeeRepository.saveAll(initialEmployees);
-                log.info("Initial employees seeded into database.");
+                log.info("Initial employees seeded into database with valid Indian phone numbers.");
             }
         }
     }

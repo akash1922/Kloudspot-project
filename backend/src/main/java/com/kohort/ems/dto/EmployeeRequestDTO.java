@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public class EmployeeRequestDTO {
 
     @NotBlank(message = "Employee ID is required")
-    @Pattern(regexp = "^[A-Za-z0-9_-]{2,30}$", message = "Employee ID must be 2-30 characters with letters, numbers, hyphens or underscores only")
+    @Pattern(regexp = "^(?i)EMP[A-Za-z0-9_-]{1,27}$", message = "Employee ID must start with 'EMP' (e.g. EMP1001)")
     private String employeeId;
 
     @NotBlank(message = "Full name is required")
@@ -38,7 +38,8 @@ public class EmployeeRequestDTO {
 
     @NotNull(message = "Salary is required")
     @DecimalMin(value = "0.01", message = "Salary must be strictly greater than 0")
-    @Digits(integer = 10, fraction = 2, message = "Salary can have up to 10 integer digits and 2 decimals")
+    @DecimalMax(value = "9999999.99", message = "Salary cannot exceed 7 digits (maximum ₹99,99,999)")
+    @Digits(integer = 7, fraction = 2, message = "Salary cannot exceed 7 digits")
     private BigDecimal salary;
 
     @NotNull(message = "Employment status is required (Active or Inactive)")

@@ -1,13 +1,13 @@
-# NexusEMS — Production Employee Management System
+# Kohort EMS — Production Staff Management Platform
 
 ![Java 17](https://img.shields.io/badge/Java-17%2B-orange?logo=openjdk)
 ![Spring Boot 3.4.3](https://img.shields.io/badge/Spring%20Boot-3.4.3-brightgreen?logo=springboot)
 ![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL%20(Supabase)-blue?logo=postgresql)
 ![React 18](https://img.shields.io/badge/Frontend-React%2018%20%2B%20Vite-61dafb?logo=react)
 ![JWT](https://img.shields.io/badge/Security-Spring%20Security%20%2B%20JWT-red?logo=jsonwebtokens)
-![Tests](https://img.shields.io/badge/Tests-17%20Passed%20(JUnit%205%20%2B%20Mockito)-success)
+![Tests](https://img.shields.io/badge/Tests-18%20Passed%20(JUnit%205%20%2B%20Mockito)-success)
 
-A modern, production-grade enterprise **Employee Management System** featuring complete CRUD operations, dynamic real-time search, multi-criteria filtering, pagination, CSV reporting, department administration, and stateless JWT authentication.
+A modern, production-grade enterprise **Kohort EMS** platform featuring complete CRUD operations, dynamic real-time search, multi-criteria filtering, pagination, CSV reporting, department administration, and stateless JWT authentication.
 
 ---
 
@@ -22,7 +22,7 @@ A modern, production-grade enterprise **Employee Management System** featuring c
 - **Department Administration**: Manage company divisions with referential deletion safeguards.
 - **Stateless JWT Security**: BCrypt password hashing, token expiration, and secure role-based authorization.
 - **Swagger / OpenAPI 3.0 Documentation**: Interactive API testing console embedded directly at `/swagger-ui.html`.
-- **Robust Unit Testing**: 100% automated service-layer test suite powered by **JUnit 5** and **Mockito** (17 tests passing).
+- **Robust Unit Testing**: 100% automated service-layer test suite powered by **JUnit 5** and **Mockito** (18 tests passing).
 
 ---
 
@@ -97,7 +97,7 @@ Make sure the following tools are installed on your machine:
    - User: `postgres.[project-ref]`
    - Password: `[your-db-password]`
 
-*(Optional)* You can run `backend/src/main/resources/schema.sql` and `data.sql` in the Supabase SQL Editor, though Spring Data JPA will also automatically initialize tables upon first connection.
+> **Database Setup Note**: Spring Boot automatically initializes and updates the database schema (`ddl-auto: update`) and automatically seeds the default administrator (`admin` / `admin123`) and company departments on startup via `DataInitializer.java`. For manual database inspection, CI/CD provisioning, or direct execution in the Supabase SQL editor, complete reference scripts are provided in `backend/src/main/resources/schema.sql` (exact table definitions, constraints, and search indices) and `backend/src/main/resources/data.sql` (verified seed credentials and sample departments).
 
 ---
 

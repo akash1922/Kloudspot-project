@@ -19,8 +19,8 @@ public class OpenApiConfig {
 
         return new OpenAPI()
                 .info(new Info()
-                        .title("Employee Management System API")
-                        .description("Production-grade RESTful API for Employee & Department Management, Filtering, CSV Export, and JWT Security")
+                        .title("Kohort EMS API")
+                        .description("Production-grade RESTful API for Kohort EMS: Staff & Department Management, Filtering, CSV Export, and JWT Security")
                         .version("1.0.0")
                         .contact(new Contact()
                                 .name("Admin Support")

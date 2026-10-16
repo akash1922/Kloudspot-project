@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import ToastContainer from './components/Toast';
 import LoginPage from './pages/LoginPage';
@@ -8,6 +9,7 @@ import EmployeeListPage from './pages/EmployeeListPage';
 import EmployeeFormPage from './pages/EmployeeFormPage';
 import EmployeeDetailsPage from './pages/EmployeeDetailsPage';
 import DepartmentListPage from './pages/DepartmentListPage';
+import ArchivePage from './pages/ArchivePage';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -41,8 +43,9 @@ const AppLayout = ({ children }) => {
 
 export function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
         <Routes>
           {/* Public Route */}
           <Route path="/login" element={<LoginPage />} />
@@ -98,6 +101,16 @@ export function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/archive"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <ArchivePage />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
@@ -107,6 +120,7 @@ export function App() {
         <ToastContainer />
       </BrowserRouter>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 

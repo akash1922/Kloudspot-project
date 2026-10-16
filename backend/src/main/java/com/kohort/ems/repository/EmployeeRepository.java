@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -16,4 +18,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSp
     boolean existsByEmailAndIdNot(String email, Long id);
     boolean existsByEmployeeIdAndIdNot(String employeeId, Long id);
     long countByDepartmentId(Long departmentId);
+    long countByDepartmentIdAndArchivedFalse(Long departmentId);
+    List<Employee> findByArchivedTrueOrderByArchivedAtDesc();
+    List<Employee> findByArchivedTrueAndArchivedAtBefore(LocalDateTime cutoff);
 }

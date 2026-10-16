@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Users, Lock, User, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
+import { Users, Lock, User, ArrowRight, ShieldCheck, Sparkles, Sun, Moon } from 'lucide-react';
 
 export const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -10,6 +11,7 @@ export const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const { login } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleQuickFill = () => {
@@ -47,9 +49,27 @@ export const LoginPage = () => {
         alignItems: 'center',
         justifyContent: 'center',
         padding: 'var(--space-4)',
-        background: 'radial-gradient(ellipse at top, #eef2ff 0%, #f8fafc 70%)',
+        background: 'radial-gradient(ellipse at top, var(--primary-subtle) 0%, var(--bg-app) 70%)',
+        position: 'relative',
       }}
     >
+      {/* Top right theme toggle */}
+      <div style={{ position: 'absolute', top: '20px', right: '24px' }}>
+        <button
+          type="button"
+          className="theme-toggle-btn"
+          onClick={toggleTheme}
+          aria-label={`Switch to ${theme === 'dark' ? 'Baby Pink light' : 'dark'} mode`}
+          title={`Currently ${theme === 'dark' ? 'Dark Mode' : 'Baby Pink Light Mode'}. Click to toggle.`}
+        >
+          {theme === 'dark' ? (
+            <Sun size={16} className="theme-toggle-icon sun-icon" />
+          ) : (
+            <Moon size={16} className="theme-toggle-icon moon-icon" />
+          )}
+          <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+        </button>
+      </div>
       <div
         className="card"
         style={{

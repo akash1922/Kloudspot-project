@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { departmentApi } from '../api/departments';
 import { useAuth } from '../context/AuthContext';
 import ConfirmModal from '../components/ConfirmModal';
+import { formatDate } from '../utils/formatters';
 import { Building2, Plus, Edit2, Trash2, Users, AlertCircle, X, Check } from 'lucide-react';
 
 export const DepartmentListPage = () => {
@@ -126,9 +127,7 @@ export const DepartmentListPage = () => {
       >
         <div>
           <h1 style={{ fontSize: '1.75rem', marginBottom: 'var(--space-1)' }}>Department Management</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem' }}>
-            Configure organizational divisions and oversee employee allocations
-          </p>
+
         </div>
 
         <button onClick={openAddModal} className="btn btn-primary">
@@ -144,7 +143,7 @@ export const DepartmentListPage = () => {
               <tr>
                 <th>Department Name</th>
                 <th>Description</th>
-                <th>Assigned Staff</th>
+                <th>Count</th>
                 <th>Created Date</th>
                 <th style={{ textAlign: 'right' }}>Actions</th>
               </tr>
@@ -205,7 +204,7 @@ export const DepartmentListPage = () => {
                     </td>
                     <td>
                       <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                        {dept.createdAt ? new Date(dept.createdAt).toLocaleDateString() : '—'}
+                        {dept.createdAt ? formatDate(dept.createdAt) : '—'}
                       </span>
                     </td>
                     <td style={{ textAlign: 'right' }}>

@@ -49,12 +49,19 @@ public class Employee {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(nullable = false)
+    private boolean archived = false;
+
+    @Column(name = "archived_at")
+    private LocalDateTime archivedAt;
+
     public Employee() {
     }
 
     public Employee(Long id, String employeeId, String fullName, String email, String phoneNumber,
                     Department department, String designation, LocalDate dateOfJoining,
-                    BigDecimal salary, EmploymentStatus status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+                    BigDecimal salary, EmploymentStatus status, LocalDateTime createdAt,
+                    LocalDateTime updatedAt, boolean archived, LocalDateTime archivedAt) {
         this.id = id;
         this.employeeId = employeeId;
         this.fullName = fullName;
@@ -67,6 +74,8 @@ public class Employee {
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.archived = archived;
+        this.archivedAt = archivedAt;
     }
 
     @PrePersist
@@ -97,6 +106,8 @@ public class Employee {
         private EmploymentStatus status;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
+        private boolean archived = false;
+        private LocalDateTime archivedAt;
 
         public Builder id(Long id) { this.id = id; return this; }
         public Builder employeeId(String employeeId) { this.employeeId = employeeId; return this; }
@@ -110,13 +121,15 @@ public class Employee {
         public Builder status(EmploymentStatus status) { this.status = status; return this; }
         public Builder createdAt(LocalDateTime createdAt) { this.createdAt = createdAt; return this; }
         public Builder updatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; return this; }
+        public Builder archived(boolean archived) { this.archived = archived; return this; }
+        public Builder archivedAt(LocalDateTime archivedAt) { this.archivedAt = archivedAt; return this; }
 
         public Employee build() {
-            return new Employee(id, employeeId, fullName, email, phoneNumber, department, designation, dateOfJoining, salary, status, createdAt, updatedAt);
+            return new Employee(id, employeeId, fullName, email, phoneNumber, department, designation, dateOfJoining, salary, status, createdAt, updatedAt, archived, archivedAt);
         }
     }
 
-    // Standard Getters and Setters
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -152,4 +165,10 @@ public class Employee {
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    public boolean isArchived() { return archived; }
+    public void setArchived(boolean archived) { this.archived = archived; }
+
+    public LocalDateTime getArchivedAt() { return archivedAt; }
+    public void setArchivedAt(LocalDateTime archivedAt) { this.archivedAt = archivedAt; }
 }

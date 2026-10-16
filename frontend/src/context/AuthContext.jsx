@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { authApi } from '../api/auth';
 
 const AuthContext = createContext(null);
@@ -17,20 +17,20 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const addToast = (message, type = 'success') => {
+  const addToast = useCallback((message, type = 'success') => {
     const id = Date.now() + Math.random().toString(36).substring(2, 9);
     setToasts((prev) => [...prev, { id, message, type }]);
 
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 4500);
-  };
+  }, []);
 
-  const removeToast = (id) => {
+  const removeToast = useCallback((id) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
-  };
+  }, []);
 
-  const login = async (username, password) => {
+  const login = useCallback(async (username, password) => {
     try {
       const data = await authApi.login(username, password);
       setUser({ username: data.username, role: data.role });
@@ -42,14 +42,14 @@ export const AuthProvider = ({ children }) => {
       addToast(message, 'error');
       throw err;
     }
-  };
+  }, [addToast]);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     authApi.logout();
     setUser(null);
     setToken(null);
     addToast('You have been logged out.', 'success');
-  };
+  }, [addToast]);
 
   const value = {
     user,

@@ -1,9 +1,6 @@
 package com.kohort.ems.controller;
 
-import com.kohort.ems.dto.ApiResponseDTO;
-import com.kohort.ems.dto.EmployeeRequestDTO;
-import com.kohort.ems.dto.EmployeeResponseDTO;
-import com.kohort.ems.dto.PaginatedResponseDTO;
+import com.kohort.ems.dto.*;
 import com.kohort.ems.model.EmploymentStatus;
 import com.kohort.ems.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,11 +12,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/employees")
-@Tag(name = "Employees", description = "Endpoints for employee CRUD, search, filter, pagination, and CSV export")
+@Tag(name = "Employees", description = "Endpoints for employee CRUD, search, filter, pagination, audit logs, archive, and CSV export/import")
 @SecurityRequirement(name = "BearerAuth")
 public class EmployeeController {
 
@@ -29,9 +30,12 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
+    private String getUsername(Authentication auth) {
+        return auth != null ? auth.getName() : "admin";
+    }
+
     @GetMapping
-    @Operation(summary = "Get employees with pagination, search, and filters",
-            description = "Search across full name, email, or employee ID. Filter by department ID and status. Sort dynamically.")
+    @Operation(summary = "Get employees with pagination, search, and filters")
     public ResponseEntity<ApiResponseDTO<PaginatedResponseDTO<EmployeeResponseDTO>>> getEmployees(
             @Parameter(description = "Search term for full name, email, or employee ID")
             @RequestParam(required = false) String search,
@@ -43,7 +47,7 @@ public class EmployeeController {
             @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Number of items per page")
             @RequestParam(defaultValue = "10") int size,
-            @Parameter(description = "Field name to sort by (e.g., id, fullName, salary, dateOfJoining)")
+            @Parameter(description = "Field name to sort by")
             @RequestParam(defaultValue = "id") String sortBy,
             @Parameter(description = "Sort direction: asc or desc")
             @RequestParam(defaultValue = "asc") String sortDir
@@ -54,6 +58,13 @@ public class EmployeeController {
         return ResponseEntity.ok(ApiResponseDTO.ok("Employees retrieved successfully", result));
     }
 
+    @GetMapping({"/archived", "/archive"})
+    @Operation(summary = "Get archived employees with 13-day TTL status")
+    public ResponseEntity<ApiResponseDTO<List<EmployeeResponseDTO>>> getArchivedEmployees() {
+        List<EmployeeResponseDTO> result = employeeService.getArchivedEmployees();
+        return ResponseEntity.ok(ApiResponseDTO.ok("Archived employees retrieved successfully", result));
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Get employee details by ID")
     public ResponseEntity<ApiResponseDTO<EmployeeResponseDTO>> getEmployeeById(@PathVariable Long id) {
@@ -61,12 +72,20 @@ public class EmployeeController {
         return ResponseEntity.ok(ApiResponseDTO.ok("Employee details retrieved successfully", result));
     }
 
+    @GetMapping("/{id}/audit-logs")
+    @Operation(summary = "Get audit edit trail and history for an employee")
+    public ResponseEntity<ApiResponseDTO<List<EmployeeAuditLogDTO>>> getAuditLogs(@PathVariable Long id) {
+        List<EmployeeAuditLogDTO> logs = employeeService.getAuditLogs(id);
+        return ResponseEntity.ok(ApiResponseDTO.ok("Audit logs retrieved successfully", logs));
+    }
+
     @PostMapping
     @Operation(summary = "Create a new employee")
     public ResponseEntity<ApiResponseDTO<EmployeeResponseDTO>> createEmployee(
-            @Valid @RequestBody EmployeeRequestDTO request
+            @Valid @RequestBody EmployeeRequestDTO request,
+            Authentication auth
     ) {
-        EmployeeResponseDTO result = employeeService.createEmployee(request);
+        EmployeeResponseDTO result = employeeService.createEmployee(request, getUsername(auth));
         return new ResponseEntity<>(ApiResponseDTO.ok("Employee created successfully", result), HttpStatus.CREATED);
     }
 
@@ -74,17 +93,49 @@ public class EmployeeController {
     @Operation(summary = "Update an existing employee")
     public ResponseEntity<ApiResponseDTO<EmployeeResponseDTO>> updateEmployee(
             @PathVariable Long id,
-            @Valid @RequestBody EmployeeRequestDTO request
+            @Valid @RequestBody EmployeeRequestDTO request,
+            Authentication auth
     ) {
-        EmployeeResponseDTO result = employeeService.updateEmployee(id, request);
+        EmployeeResponseDTO result = employeeService.updateEmployee(id, request, getUsername(auth));
         return ResponseEntity.ok(ApiResponseDTO.ok("Employee updated successfully", result));
     }
 
+    @PatchMapping("/{id}/status")
+    @Operation(summary = "Quick toggle employee status (Active/Inactive) with audit log")
+    public ResponseEntity<ApiResponseDTO<EmployeeResponseDTO>> toggleStatus(
+            @PathVariable Long id,
+            @RequestParam EmploymentStatus status,
+            Authentication auth
+    ) {
+        EmployeeResponseDTO result = employeeService.toggleStatus(id, status, getUsername(auth));
+        return ResponseEntity.ok(ApiResponseDTO.ok("Employee status updated to " + status, result));
+    }
+
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete an employee by ID")
-    public ResponseEntity<ApiResponseDTO<Void>> deleteEmployee(@PathVariable Long id) {
-        employeeService.deleteEmployee(id);
-        return ResponseEntity.ok(ApiResponseDTO.ok("Employee deleted successfully"));
+    @Operation(summary = "Move employee to Archive (13-day TTL retention)")
+    public ResponseEntity<ApiResponseDTO<Void>> archiveEmployee(
+            @PathVariable Long id,
+            Authentication auth
+    ) {
+        employeeService.archiveEmployee(id, getUsername(auth));
+        return ResponseEntity.ok(ApiResponseDTO.ok("Employee moved to archive (13-day retention policy active)"));
+    }
+
+    @PostMapping("/{id}/restore")
+    @Operation(summary = "Restore employee from Archive back to active directory")
+    public ResponseEntity<ApiResponseDTO<EmployeeResponseDTO>> restoreEmployee(
+            @PathVariable Long id,
+            Authentication auth
+    ) {
+        EmployeeResponseDTO restored = employeeService.restoreEmployee(id, getUsername(auth));
+        return ResponseEntity.ok(ApiResponseDTO.ok("Employee restored successfully", restored));
+    }
+
+    @DeleteMapping("/{id}/permanent")
+    @Operation(summary = "Permanently purge employee from database")
+    public ResponseEntity<ApiResponseDTO<Void>> permanentlyDeleteEmployee(@PathVariable Long id) {
+        employeeService.permanentlyDeleteEmployee(id);
+        return ResponseEntity.ok(ApiResponseDTO.ok("Employee permanently purged from database"));
     }
 
     @GetMapping("/export/csv")
@@ -102,5 +153,15 @@ public class EmployeeController {
         headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
 
         return new ResponseEntity<>(csvData, headers, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/import/csv", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Bulk import employees via CSV file")
+    public ResponseEntity<ApiResponseDTO<CsvImportResultDTO>> importEmployeesCsv(
+            @RequestParam("file") MultipartFile file,
+            Authentication auth
+    ) {
+        CsvImportResultDTO result = employeeService.importEmployeesCsv(file, getUsername(auth));
+        return ResponseEntity.ok(ApiResponseDTO.ok("CSV import completed", result));
     }
 }

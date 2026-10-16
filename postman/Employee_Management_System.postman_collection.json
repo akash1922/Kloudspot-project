@@ -1,7 +1,7 @@
 {
   "info": {
     "_postman_id": "9a38f322-83b1-4c48-8df0-10901e12fa28",
-    "name": "Employee Management System (NexusEMS) API",
+    "name": "Kohort EMS API",
     "description": "Complete production API collection covering Authentication, Employee CRUD, Dynamic Search & Filters, CSV Export, and Department Management.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },

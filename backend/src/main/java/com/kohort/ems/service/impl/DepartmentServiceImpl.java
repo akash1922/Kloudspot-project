@@ -78,7 +78,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         Department department = departmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + id));
 
-        long employeeCount = employeeRepository.countByDepartmentId(id);
+        long employeeCount = employeeRepository.countByDepartmentIdAndArchivedFalse(id);
         if (employeeCount > 0) {
             throw new BadRequestException("Cannot delete department '" + department.getName() + "' because it still has " + employeeCount + " assigned employee(s). Please reassign them first.");
         }
@@ -87,7 +87,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     private DepartmentDTO mapToDTO(Department dept) {
-        long count = employeeRepository.countByDepartmentId(dept.getId());
+        long count = employeeRepository.countByDepartmentIdAndArchivedFalse(dept.getId());
         return DepartmentDTO.builder()
                 .id(dept.getId())
                 .name(dept.getName())

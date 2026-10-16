@@ -4,6 +4,7 @@ import { employeeApi } from '../api/employees';
 import { useAuth } from '../context/AuthContext';
 import StatusBadge from '../components/StatusBadge';
 import ConfirmModal from '../components/ConfirmModal';
+import { formatCurrency, formatDate, formatDateTime } from '../utils/formatters';
 import {
   ArrowLeft,
   Edit2,
@@ -13,10 +14,13 @@ import {
   Building,
   Briefcase,
   Calendar,
-  DollarSign,
   Clock,
   User,
   ShieldCheck,
+  History,
+  CheckCircle,
+  FileText,
+  AlertCircle,
 } from 'lucide-react';
 
 export const EmployeeDetailsPage = () => {
@@ -25,7 +29,9 @@ export const EmployeeDetailsPage = () => {
   const { addToast } = useAuth();
 
   const [employee, setEmployee] = useState(null);
+  const [auditLogs, setAuditLogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [logsLoading, setLogsLoading] = useState(true);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -39,24 +45,29 @@ export const EmployeeDetailsPage = () => {
         navigate('/');
       })
       .finally(() => setLoading(false));
+
+    // Fetch audit trail history
+    setLogsLoading(true);
+    employeeApi
+      .getAuditLogs(id)
+      .then((logs) => setAuditLogs(logs || []))
+      .catch((err) => {
+        console.warn('Could not load audit logs', err);
+      })
+      .finally(() => setLogsLoading(false));
   }, [id, navigate, addToast]);
 
   const handleDelete = async () => {
     setDeleting(true);
     try {
       await employeeApi.delete(id);
-      addToast(`Employee '${employee.fullName}' deleted successfully.`, 'success');
+      addToast(`Employee '${employee.fullName}' moved to Archive with 13-day retention policy.`, 'success');
       navigate('/');
     } catch (err) {
-      addToast(err.response?.data?.message || 'Failed to delete employee.', 'error');
+      addToast(err.response?.data?.message || 'Failed to archive employee.', 'error');
       setDeleting(false);
       setDeleteModalOpen(false);
     }
-  };
-
-  const formatCurrency = (val) => {
-    if (val === null || val === undefined) return '$0.00';
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
   };
 
   const calculateTenure = (joiningDate) => {
@@ -64,11 +75,28 @@ export const EmployeeDetailsPage = () => {
     const start = new Date(joiningDate);
     const now = new Date();
     const diffMonths = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
-    if (diffMonths < 1) return 'Less than a month';
+    if (diffMonths < 1) return 'First month';
     const years = Math.floor(diffMonths / 12);
     const months = diffMonths % 12;
     if (years === 0) return `${months} month${months > 1 ? 's' : ''}`;
     return `${years} yr${years > 1 ? 's' : ''}${months > 0 ? `, ${months} mo${months > 1 ? 's' : ''}` : ''}`;
+  };
+
+  const getActionBadge = (action) => {
+    switch (action) {
+      case 'CREATED':
+        return { label: 'Added', bg: 'var(--success-subtle)', color: 'var(--success-text)' };
+      case 'UPDATED':
+        return { label: 'Changed', bg: 'var(--primary-subtle)', color: 'var(--primary-text)' };
+      case 'STATUS_CHANGE':
+        return { label: 'Status Change', bg: 'var(--warning-subtle)', color: 'var(--warning-text)' };
+      case 'RESTORED':
+        return { label: 'Restored', bg: 'var(--primary-subtle)', color: 'var(--primary-text)' };
+      case 'DELETED':
+        return { label: 'Archived', bg: 'var(--danger-subtle)', color: 'var(--danger-text)' };
+      default:
+        return { label: action || 'Edited', bg: 'var(--bg-subtle)', color: 'var(--text-secondary)' };
+    }
   };
 
   if (loading) {
@@ -81,9 +109,12 @@ export const EmployeeDetailsPage = () => {
 
   if (!employee) return null;
 
+  // Latest edit log entry if any
+  const latestLog = auditLogs.length > 0 ? auditLogs[0] : null;
+
   return (
-    <div className="page-wrapper" style={{ maxWidth: '960px' }}>
-      {/* Top back button & actions */}
+    <div className="page-wrapper" style={{ maxWidth: '980px' }}>
+      {/* Top back button & action buttons */}
       <div
         style={{
           display: 'flex',
@@ -119,7 +150,7 @@ export const EmployeeDetailsPage = () => {
             className="btn btn-danger"
           >
             <Trash2 size={16} />
-            <span>Delete Employee</span>
+            <span>Archive Employee</span>
           </button>
         </div>
       </div>
@@ -134,7 +165,7 @@ export const EmployeeDetailsPage = () => {
             justifyContent: 'space-between',
             flexWrap: 'wrap',
             gap: 'var(--space-6)',
-            background: 'linear-gradient(to right, #fafbfc, #ffffff)',
+            background: 'linear-gradient(to right, var(--bg-subtle), var(--bg-surface))',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-5)' }}>
@@ -143,7 +174,7 @@ export const EmployeeDetailsPage = () => {
                 width: '72px',
                 height: '72px',
                 borderRadius: 'var(--radius-lg)',
-                background: 'linear-gradient(135deg, var(--primary), #6366f1)',
+                background: 'linear-gradient(135deg, var(--primary), #ec4899)',
                 color: 'white',
                 display: 'flex',
                 alignItems: 'center',
@@ -191,7 +222,7 @@ export const EmployeeDetailsPage = () => {
               padding: 'var(--space-4) var(--space-6)',
               backgroundColor: 'var(--primary-subtle)',
               borderRadius: 'var(--radius-md)',
-              border: '1px solid #c7d2fe',
+              border: '1px solid var(--border-subtle)',
               textAlign: 'right',
             }}
           >
@@ -211,9 +242,10 @@ export const EmployeeDetailsPage = () => {
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
           gap: 'var(--space-6)',
+          marginBottom: 'var(--space-6)',
         }}
       >
-        {/* Contact Info Card */}
+        {/* Contact Information */}
         <div className="card">
           <div className="card-header">
             <h3 style={{ fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -236,7 +268,7 @@ export const EmployeeDetailsPage = () => {
 
             <div>
               <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>
-                Direct Phone Number
+                Direct Mobile Number
               </span>
               <a
                 href={`tel:${employee.phoneNumber}`}
@@ -248,7 +280,7 @@ export const EmployeeDetailsPage = () => {
           </div>
         </div>
 
-        {/* Employment & Tenure Card */}
+        {/* Employment & Tenure */}
         <div className="card">
           <div className="card-header">
             <h3 style={{ fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -272,7 +304,7 @@ export const EmployeeDetailsPage = () => {
                   Date of Joining
                 </span>
                 <span style={{ fontSize: '0.95rem', fontWeight: 600 }}>
-                  {employee.dateOfJoining}
+                  {formatDate(employee.dateOfJoining)}
                 </span>
               </div>
 
@@ -288,42 +320,154 @@ export const EmployeeDetailsPage = () => {
           </div>
         </div>
 
-        {/* Audit Meta Card */}
+        {/* Latest Modification Highlight */}
         <div className="card">
           <div className="card-header">
             <h3 style={{ fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Clock size={18} color="var(--primary)" />
-              <span>Audit & Timestamps</span>
+              <span>Latest Activity</span>
             </h3>
           </div>
           <div className="card-body" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-            <div>
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>
-                Record Created
-              </span>
-              <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                {employee.createdAt ? new Date(employee.createdAt).toLocaleString() : 'System Seed'}
-              </span>
-            </div>
-
-            <div>
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>
-                Last Modified
-              </span>
-              <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                {employee.updatedAt ? new Date(employee.updatedAt).toLocaleString() : 'N/A'}
-              </span>
-            </div>
+            {latestLog ? (
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                  <span
+                    style={{
+                      fontSize: '0.75rem',
+                      fontWeight: 700,
+                      padding: '2px 8px',
+                      borderRadius: '12px',
+                      backgroundColor: getActionBadge(latestLog.action).bg,
+                      color: getActionBadge(latestLog.action).color,
+                    }}
+                  >
+                    {getActionBadge(latestLog.action).label}
+                  </span>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)' }}>
+                    by {latestLog.performedBy || 'admin'}
+                  </span>
+                </div>
+                <div style={{ fontSize: '0.825rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>
+                  {latestLog.details}
+                </div>
+                <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                  {formatDateTime(latestLog.timestamp)}
+                </div>
+              </div>
+            ) : (
+              <div>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>
+                  Record Registered
+                </span>
+                <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                  {employee.createdAt ? formatDateTime(employee.createdAt) : 'System Seed'}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
+      {/* History & Audit Log Section */}
+      <div className="card">
+        <div
+          className="card-header"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <h3 style={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <History size={18} color="var(--primary)" />
+            <span>Audit Trail & Change History</span>
+          </h3>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+            Timestamps recorded with exact seconds
+          </span>
+        </div>
+
+        <div className="card-body" style={{ padding: 'var(--space-6)' }}>
+          {logsLoading ? (
+            <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--space-6)' }}>
+              <div className="spinner spinner-primary" style={{ width: '24px', height: '24px' }} />
+            </div>
+          ) : auditLogs.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: 'var(--space-6)', color: 'var(--text-muted)' }}>
+              <FileText size={32} style={{ margin: '0 auto var(--space-2)', opacity: 0.5 }} />
+              <p style={{ margin: 0, fontSize: '0.9rem' }}>No audit history records found for this employee.</p>
+            </div>
+          ) : (
+            <div className="timeline">
+              {auditLogs.map((log) => {
+                const badge = getActionBadge(log.action);
+                return (
+                  <div key={log.id} className="timeline-item">
+                    <div className="timeline-dot" />
+                    <div className="timeline-content">
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          flexWrap: 'wrap',
+                          gap: 'var(--space-2)',
+                          marginBottom: '4px',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span
+                            style={{
+                              fontSize: '0.75rem',
+                              fontWeight: 700,
+                              padding: '2px 8px',
+                              borderRadius: '12px',
+                              backgroundColor: badge.bg,
+                              color: badge.color,
+                            }}
+                          >
+                            {badge.label}
+                          </span>
+                          <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-main)' }}>
+                            by {log.performedBy || 'admin'}
+                          </span>
+                        </div>
+
+                        {/* Timestamp with exact seconds */}
+                        <span
+                          style={{
+                            fontSize: '0.8rem',
+                            fontWeight: 600,
+                            fontFamily: 'var(--font-mono)',
+                            color: 'var(--text-secondary)',
+                            backgroundColor: 'var(--bg-subtle)',
+                            padding: '2px 8px',
+                            borderRadius: 'var(--radius-xs)',
+                          }}
+                        >
+                          {formatDateTime(log.timestamp)}
+                        </span>
+                      </div>
+
+                      <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                        {log.details}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Delete / Archive Confirmation Modal */}
       <ConfirmModal
         isOpen={deleteModalOpen}
-        title="Delete Employee"
-        message={`Are you sure you want to permanently delete the profile of ${employee.fullName} (${employee.employeeId})? This action cannot be reversed.`}
-        confirmText="Confirm Delete"
+        title="Move Employee to Archive"
+        message={`Are you sure you want to archive ${employee.fullName} (${employee.employeeId})? The record will be safely retained in the Archive for 13 days (TTL policy) before permanent purge, and can be restored at any time.`}
+        confirmText="Confirm Archive"
         loading={deleting}
         onConfirm={handleDelete}
         onCancel={() => setDeleteModalOpen(false)}

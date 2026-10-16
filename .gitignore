@@ -15,6 +15,16 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Environment & Secrets (Never commit real credentials)
+.env
+.env.local
+.env.*.local
+backend/.env
+backend/.env.local
+frontend/.env
+frontend/.env.local
+!*.env.example
+
 # IDE / System
 .idea/
 *.iml
@@ -22,3 +32,7 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 *.log
+
+# Local Scratch & Test Ingestion Scripts
+generate_sample_100.js
+push_100_employees.js

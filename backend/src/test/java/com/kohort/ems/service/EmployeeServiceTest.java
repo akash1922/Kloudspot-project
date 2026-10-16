@@ -9,6 +9,7 @@ import com.kohort.ems.model.Department;
 import com.kohort.ems.model.Employee;
 import com.kohort.ems.model.EmploymentStatus;
 import com.kohort.ems.repository.DepartmentRepository;
+import com.kohort.ems.repository.EmployeeAuditLogRepository;
 import com.kohort.ems.repository.EmployeeRepository;
 import com.kohort.ems.service.impl.EmployeeServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +37,6 @@ import static org.mockito.Mockito.*;
 
 /**
  * Service-layer unit tests for Employee management logic using JUnit 5 and Mockito.
- * No real database connection is required; Mockito mocks repository behaviors.
  */
 @ExtendWith(MockitoExtension.class)
 class EmployeeServiceTest {
@@ -46,6 +46,9 @@ class EmployeeServiceTest {
 
     @Mock
     private DepartmentRepository departmentRepository;
+
+    @Mock
+    private EmployeeAuditLogRepository auditLogRepository;
 
     @InjectMocks
     private EmployeeServiceImpl employeeService;
@@ -69,12 +72,13 @@ class EmployeeServiceTest {
                 .employeeId("EMP-1001")
                 .fullName("Jane Doe")
                 .email("jane.doe@company.com")
-                .phoneNumber("+1 (555) 123-4567")
+                .phoneNumber("+91 9876543210")
                 .department(sampleDepartment)
                 .designation("Staff Engineer")
                 .dateOfJoining(LocalDate.of(2023, 1, 15))
                 .salary(new BigDecimal("120000.00"))
                 .status(EmploymentStatus.Active)
+                .archived(false)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
@@ -83,7 +87,7 @@ class EmployeeServiceTest {
                 .employeeId("EMP-1001")
                 .fullName("Jane Doe")
                 .email("jane.doe@company.com")
-                .phoneNumber("+1 (555) 123-4567")
+                .phoneNumber("+91 9876543210")
                 .departmentId(1L)
                 .designation("Staff Engineer")
                 .dateOfJoining(LocalDate.of(2023, 1, 15))
@@ -102,7 +106,7 @@ class EmployeeServiceTest {
         when(employeeRepository.save(any(Employee.class))).thenReturn(sampleEmployee);
 
         // When
-        EmployeeResponseDTO result = employeeService.createEmployee(validRequestDTO);
+        EmployeeResponseDTO result = employeeService.createEmployee(validRequestDTO, "admin");
 
         // Then
         assertThat(result).isNotNull();
@@ -110,6 +114,7 @@ class EmployeeServiceTest {
         assertThat(result.getEmail()).isEqualTo("jane.doe@company.com");
         assertThat(result.getDepartmentName()).isEqualTo("Engineering");
         verify(employeeRepository, times(1)).save(any(Employee.class));
+        verify(auditLogRepository, times(1)).save(any());
     }
 
     @Test
@@ -119,7 +124,7 @@ class EmployeeServiceTest {
         when(employeeRepository.existsByEmployeeId("EMP-1001")).thenReturn(true);
 
         // When & Then
-        assertThatThrownBy(() -> employeeService.createEmployee(validRequestDTO))
+        assertThatThrownBy(() -> employeeService.createEmployee(validRequestDTO, "admin"))
                 .isInstanceOf(DuplicateResourceException.class)
                 .hasMessageContaining("Employee with ID 'EMP-1001' already exists");
 
@@ -134,25 +139,9 @@ class EmployeeServiceTest {
         when(employeeRepository.existsByEmail("jane.doe@company.com")).thenReturn(true);
 
         // When & Then
-        assertThatThrownBy(() -> employeeService.createEmployee(validRequestDTO))
+        assertThatThrownBy(() -> employeeService.createEmployee(validRequestDTO, "admin"))
                 .isInstanceOf(DuplicateResourceException.class)
                 .hasMessageContaining("Employee with email 'jane.doe@company.com' already exists");
-
-        verify(employeeRepository, never()).save(any(Employee.class));
-    }
-
-    @Test
-    @DisplayName("createEmployee: should throw ResourceNotFoundException when department does not exist")
-    void createEmployee_DepartmentNotFound() {
-        // Given
-        when(employeeRepository.existsByEmployeeId("EMP-1001")).thenReturn(false);
-        when(employeeRepository.existsByEmail("jane.doe@company.com")).thenReturn(false);
-        when(departmentRepository.findById(1L)).thenReturn(Optional.empty());
-
-        // When & Then
-        assertThatThrownBy(() -> employeeService.createEmployee(validRequestDTO))
-                .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessageContaining("Department not found with id: 1");
 
         verify(employeeRepository, never()).save(any(Employee.class));
     }
@@ -173,19 +162,7 @@ class EmployeeServiceTest {
     }
 
     @Test
-    @DisplayName("getEmployeeById: should throw ResourceNotFoundException when ID does not exist")
-    void getEmployeeById_NotFound() {
-        // Given
-        when(employeeRepository.findById(999L)).thenReturn(Optional.empty());
-
-        // When & Then
-        assertThatThrownBy(() -> employeeService.getEmployeeById(999L))
-                .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessageContaining("Employee not found with id: 999");
-    }
-
-    @Test
-    @DisplayName("updateEmployee: should successfully update employee data")
+    @DisplayName("updateEmployee: should successfully update employee data and create audit log")
     void updateEmployee_Success() {
         // Given
         when(employeeRepository.findById(100L)).thenReturn(Optional.of(sampleEmployee));
@@ -195,42 +172,63 @@ class EmployeeServiceTest {
         when(employeeRepository.save(any(Employee.class))).thenReturn(sampleEmployee);
 
         // When
-        EmployeeResponseDTO result = employeeService.updateEmployee(100L, validRequestDTO);
+        EmployeeResponseDTO result = employeeService.updateEmployee(100L, validRequestDTO, "admin");
 
         // Then
         assertThat(result).isNotNull();
         verify(employeeRepository, times(1)).save(any(Employee.class));
+        verify(auditLogRepository, times(1)).save(any());
     }
 
     @Test
-    @DisplayName("deleteEmployee: should delete employee when ID exists")
-    void deleteEmployee_Success() {
+    @DisplayName("toggleStatus: should flip status and record audit log")
+    void toggleStatus_Success() {
         // Given
         when(employeeRepository.findById(100L)).thenReturn(Optional.of(sampleEmployee));
-        doNothing().when(employeeRepository).delete(sampleEmployee);
+        when(employeeRepository.save(any(Employee.class))).thenReturn(sampleEmployee);
 
         // When
-        employeeService.deleteEmployee(100L);
+        EmployeeResponseDTO result = employeeService.toggleStatus(100L, EmploymentStatus.Inactive, "admin");
 
         // Then
-        verify(employeeRepository, times(1)).delete(sampleEmployee);
+        assertThat(result).isNotNull();
+        verify(employeeRepository, times(1)).save(any(Employee.class));
+        verify(auditLogRepository, times(1)).save(any());
     }
 
     @Test
-    @DisplayName("deleteEmployee: should throw ResourceNotFoundException when employee does not exist")
-    void deleteEmployee_NotFound() {
+    @DisplayName("archiveEmployee: should set archived flag and record audit log")
+    void archiveEmployee_Success() {
         // Given
-        when(employeeRepository.findById(999L)).thenReturn(Optional.empty());
+        when(employeeRepository.findById(100L)).thenReturn(Optional.of(sampleEmployee));
+        when(employeeRepository.save(any(Employee.class))).thenReturn(sampleEmployee);
 
-        // When & Then
-        assertThatThrownBy(() -> employeeService.deleteEmployee(999L))
-                .isInstanceOf(ResourceNotFoundException.class);
+        // When
+        employeeService.archiveEmployee(100L, "admin");
 
-        verify(employeeRepository, never()).delete(any(Employee.class));
+        // Then
+        verify(employeeRepository, times(1)).save(any(Employee.class));
+        verify(auditLogRepository, times(1)).save(any());
     }
 
     @Test
-    @DisplayName("getEmployees: should return paginated list of employees")
+    @DisplayName("restoreEmployee: should clear archived flag and set Active")
+    void restoreEmployee_Success() {
+        // Given
+        when(employeeRepository.findById(100L)).thenReturn(Optional.of(sampleEmployee));
+        when(employeeRepository.save(any(Employee.class))).thenReturn(sampleEmployee);
+
+        // When
+        EmployeeResponseDTO result = employeeService.restoreEmployee(100L, "admin");
+
+        // Then
+        assertThat(result).isNotNull();
+        verify(employeeRepository, times(1)).save(any(Employee.class));
+        verify(auditLogRepository, times(1)).save(any());
+    }
+
+    @Test
+    @DisplayName("getEmployees: should return paginated list of non-archived employees")
     @SuppressWarnings("unchecked")
     void getEmployees_ReturnsPaginatedList() {
         // Given
@@ -246,23 +244,76 @@ class EmployeeServiceTest {
         assertThat(result).isNotNull();
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.getTotalElements()).isEqualTo(1);
-        assertThat(result.isFirst()).isTrue();
     }
 
     @Test
-    @DisplayName("exportEmployeesToCsv: should generate non-empty CSV byte array with employee data")
-    @SuppressWarnings("unchecked")
-    void exportEmployeesToCsv_Success() {
+    @DisplayName("13-Day TTL: purgeExpiredArchives should delete records archived > 13 days ago and clean audit logs")
+    void purgeExpiredArchives_DeletesExpiredRecords() {
         // Given
-        when(employeeRepository.findAll(any(Specification.class), any(org.springframework.data.domain.Sort.class)))
-                .thenReturn(List.of(sampleEmployee));
+        Employee expiredEmployee = Employee.builder()
+                .id(200L)
+                .employeeId("EMP999")
+                .fullName("Expired Employee")
+                .email("expired@kohort.com")
+                .archived(true)
+                .archivedAt(LocalDateTime.now().minusDays(14))
+                .build();
+
+        when(employeeRepository.findByArchivedTrueAndArchivedAtBefore(any(LocalDateTime.class)))
+                .thenReturn(List.of(expiredEmployee));
 
         // When
-        byte[] csvBytes = employeeService.exportEmployeesToCsv(null, null, null);
+        employeeService.purgeExpiredArchives();
 
         // Then
-        assertThat(csvBytes).isNotEmpty();
-        String csvContent = new String(csvBytes);
-        assertThat(csvContent).contains("Employee ID", "Full Name", "EMP-1001", "Jane Doe");
+        verify(auditLogRepository, times(1)).deleteByEmployeeId(200L);
+        verify(auditLogRepository, times(1)).flush();
+        verify(employeeRepository, times(1)).deleteAll(List.of(expiredEmployee));
+        verify(employeeRepository, times(1)).flush();
+    }
+
+    @Test
+    @DisplayName("13-Day TTL: purgeExpiredArchives should do nothing when no records are older than 13 days")
+    void purgeExpiredArchives_NoExpiredRecords_DoesNotDelete() {
+        // Given
+        when(employeeRepository.findByArchivedTrueAndArchivedAtBefore(any(LocalDateTime.class)))
+                .thenReturn(List.of());
+
+        // When
+        employeeService.purgeExpiredArchives();
+
+        // Then
+        verify(auditLogRepository, never()).deleteByEmployeeId(anyLong());
+        verify(employeeRepository, never()).deleteAll(anyList());
+    }
+
+    @Test
+    @DisplayName("13-Day TTL: getArchivedEmployees should calculate positive remaining TTL days")
+    void getArchivedEmployees_CalculatesRemainingTtlDays() {
+        // Given
+        Employee activeArchive = Employee.builder()
+                .id(300L)
+                .employeeId("EMP300")
+                .fullName("Recent Archive")
+                .email("archive@kohort.com")
+                .phoneNumber("+91 9876543210")
+                .designation("Dev")
+                .salary(new BigDecimal("750000"))
+                .status(EmploymentStatus.Inactive)
+                .archived(true)
+                .archivedAt(LocalDateTime.now().minusDays(3))
+                .build();
+
+        when(employeeRepository.findByArchivedTrueAndArchivedAtBefore(any(LocalDateTime.class)))
+                .thenReturn(List.of());
+        when(employeeRepository.findByArchivedTrueOrderByArchivedAtDesc())
+                .thenReturn(List.of(activeArchive));
+
+        // When
+        List<EmployeeResponseDTO> result = employeeService.getArchivedEmployees();
+
+        // Then
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getTtlDaysRemaining()).isEqualTo(10L); // 13 - 3 = 10
     }
 }

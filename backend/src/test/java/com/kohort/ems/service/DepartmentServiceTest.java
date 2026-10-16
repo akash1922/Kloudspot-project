@@ -61,7 +61,7 @@ class DepartmentServiceTest {
     void getAllDepartments_Success() {
         // Given
         when(departmentRepository.findAll()).thenReturn(List.of(sampleDepartment));
-        when(employeeRepository.countByDepartmentId(1L)).thenReturn(5L);
+        when(employeeRepository.countByDepartmentIdAndArchivedFalse(1L)).thenReturn(5L);
 
         // When
         List<DepartmentDTO> result = departmentService.getAllDepartments();
@@ -78,7 +78,7 @@ class DepartmentServiceTest {
         // Given
         when(departmentRepository.existsByNameIgnoreCase("Engineering")).thenReturn(false);
         when(departmentRepository.save(any(Department.class))).thenReturn(sampleDepartment);
-        when(employeeRepository.countByDepartmentId(1L)).thenReturn(0L);
+        when(employeeRepository.countByDepartmentIdAndArchivedFalse(1L)).thenReturn(0L);
 
         // When
         DepartmentDTO result = departmentService.createDepartment(sampleDTO);
@@ -108,7 +108,7 @@ class DepartmentServiceTest {
     void deleteDepartment_HasEmployees() {
         // Given
         when(departmentRepository.findById(1L)).thenReturn(Optional.of(sampleDepartment));
-        when(employeeRepository.countByDepartmentId(1L)).thenReturn(3L);
+        when(employeeRepository.countByDepartmentIdAndArchivedFalse(1L)).thenReturn(3L);
 
         // When & Then
         assertThatThrownBy(() -> departmentService.deleteDepartment(1L))
@@ -123,7 +123,7 @@ class DepartmentServiceTest {
     void deleteDepartment_Success() {
         // Given
         when(departmentRepository.findById(1L)).thenReturn(Optional.of(sampleDepartment));
-        when(employeeRepository.countByDepartmentId(1L)).thenReturn(0L);
+        when(employeeRepository.countByDepartmentIdAndArchivedFalse(1L)).thenReturn(0L);
         doNothing().when(departmentRepository).delete(sampleDepartment);
 
         // When
