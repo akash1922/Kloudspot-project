@@ -10,6 +10,7 @@ import EmployeeFormPage from './pages/EmployeeFormPage';
 import EmployeeDetailsPage from './pages/EmployeeDetailsPage';
 import DepartmentListPage from './pages/DepartmentListPage';
 import ArchivePage from './pages/ArchivePage';
+import { Analytics } from '@vercel/analytics/react';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -118,6 +119,9 @@ export function App() {
 
         {/* Global Toast Alerts */}
         <ToastContainer />
+
+        {/* Vercel Web Analytics */}
+        <Analytics />
       </BrowserRouter>
     </AuthProvider>
     </ThemeProvider>

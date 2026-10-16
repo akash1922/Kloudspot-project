@@ -1,12 +1,16 @@
 # Kohort Employee Management System (EMS)
 
-![Java 17](https://img.shields.io/badge/Java-17%2B-orange?logo=openjdk)
-![Spring Boot 3.4.3](https://img.shields.io/badge/Spring%20Boot-3.4.3-brightgreen?logo=springboot)
-![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL%20(Supabase)-blue?logo=postgresql)
-![React](https://img.shields.io/badge/Frontend-React%2018%20%2B%20Vite-61dafb?logo=react)
-![Tests](https://img.shields.io/badge/Tests-Passing%20(JUnit%205%20%2B%20Mockito)-success)
-
 A full-stack Employee Management System built with Spring Boot, PostgreSQL (Supabase), and React.
+
+---
+
+### 🌐 Live Application & Resources
+
+* 🚀 **Live Web Application**: [Kohort EMS](https://kloudspot-project-red.vercel.app/) *(Click to open live deployed app)*
+* 📖 **Live Interactive Swagger API Docs**: [Swagger UI](https://kloudspot-project.onrender.com/swagger-ui.html)
+* ⚡ **Live Backend Health Status**: [Render Health Endpoint](https://kloudspot-project.onrender.com/)
+* 🧪 **Automated Testing & TTL Verification**: [TESTING.md](TESTING.md) *(18 Backend + 17 Frontend = 35 tests, plus TTL SQL queries)*
+* 📸 **Screenshots & Visual Showcase**: [DEMO.md](DEMO.md) *(Feature tour, themes, and screen recording demonstrations)*
 
 ---
 
@@ -23,17 +27,20 @@ Before running the application, make sure the following tools are installed:
 
 ## 🛠️ Step-by-Step Setup & Installation
 
-### Step 1: Database Setup (Supabase PostgreSQL)
+### Step 1: Database Setup & Connection Keys (Supabase PostgreSQL)
 
 1. Create a free account at [supabase.com](https://supabase.com).
 2. Click **New Project**, enter a project name (e.g. `kohort-ems`), and set a secure database password.
-3. Once the database is ready, go to **Project Settings** → **Database** → **Connection string** (URI).
-4. Note your connection parameters:
-   - **Host**: `aws-0-[region].pooler.supabase.com`
-   - **Database**: `postgres`
-   - **Port**: `5432` or `6543`
-   - **Username**: `postgres.[your-project-ref]`
-   - **Password**: `[your-database-password]`
+3. **Generate / Copy Connection Keys**:
+   - In your Supabase Dashboard, open your database view.
+   - Look at the top navigation bar (next to `main / PRODUCTION`) and click the **Connect** button.
+   - In the modal that appears, select **Direct connection** or **Session pooler** (recommended for serverless/pooled connections).
+   - All connection details will be displayed ready to copy:
+     - **Host**: `aws-0-[region].pooler.supabase.com`
+     - **Database**: `postgres`
+     - **Port**: `5432` or `6543`
+     - **User**: `postgres.[your-project-ref]` (or `postgres` for direct)
+     - **Password**: `[your-database-password]`
 
 > **Automatic Schema & Data Seeding**:
 > When the backend starts up, Spring Boot automatically creates and updates all database tables (`ddl-auto: update`) and seeds the initial administrator account and core departments via `DataInitializer.java`. Reference SQL scripts are also provided in `backend/src/main/resources/schema.sql` and `backend/src/main/resources/data.sql`.
@@ -108,19 +115,42 @@ Use the pre-seeded administrator credentials to log in:
 
 ---
 
-## 🧪 Running Automated Unit Tests
+## 🧪 Running Automated Tests (35 Tests Total)
 
-To run the backend service-layer unit tests:
+The project includes **35 automated tests** across both backend and frontend layers (100% passing):
 
+| Layer | Framework | Tests | Status |
+| :--- | :--- | :---: | :---: |
+| **Backend Service Layer** | JUnit 5 + Mockito | 18 | Passing |
+| **Frontend Utilities & UI** | Vitest + React Testing Library | 17 | Passing |
+| **Total Automated Tests** | | **35** | **100% Passing** |
+
+### 1. Run Backend Tests (18 Tests)
 ```bash
 cd backend
 
-# On Windows:
+# Windows:
 .\mvnw.cmd test
 
-# On Linux / macOS:
+# Linux / macOS:
 ./mvnw test
 ```
+
+### 2. Run Frontend Tests (17 Tests)
+```bash
+cd frontend
+npm test
+```
+
+> 📖 **Full Testing & Verification Guide**:  
+> For the comprehensive test suite breakdown, Mockito coverage, and the **SQL queries to test the 13-day TTL archive auto-purge**, see **[TESTING.md](TESTING.md)**.
+
+---
+
+## 📸 Screenshots & Screen Recordings
+
+To view visual walkthroughs of the application, including the light/dark mode theme, bulk Excel staging modal, audit logs, and screen recordings:
+👉 **See [DEMO.md](DEMO.md)**
 
 ---
 
@@ -133,3 +163,4 @@ A pre-configured Postman collection is included in the repository at:
 1. Open Postman → Click **Import** → Choose the collection file.
 2. Execute the **Login (Admin)** request first — it automatically sets the authorization token for all subsequent requests.
 3. Test any employee or department endpoint.
+
