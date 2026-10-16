@@ -46,9 +46,6 @@ Before running the application, make sure the following tools are installed:
    ```bash
    # Windows (PowerShell):
    cp backend/.env.example backend/.env
-
-   # Linux / macOS:
-   cp backend/.env.example backend/.env
    ```
 
 2. Open `backend/.env` and update it with your Supabase credentials:
