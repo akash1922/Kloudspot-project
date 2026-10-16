@@ -1,260 +1,138 @@
-# Kohort EMS — Production Staff Management Platform
+# Kohort Employee Management System (EMS)
 
 ![Java 17](https://img.shields.io/badge/Java-17%2B-orange?logo=openjdk)
 ![Spring Boot 3.4.3](https://img.shields.io/badge/Spring%20Boot-3.4.3-brightgreen?logo=springboot)
 ![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL%20(Supabase)-blue?logo=postgresql)
-![React 18](https://img.shields.io/badge/Frontend-React%2018%20%2B%20Vite-61dafb?logo=react)
-![JWT](https://img.shields.io/badge/Security-Spring%20Security%20%2B%20JWT-red?logo=jsonwebtokens)
-![Tests](https://img.shields.io/badge/Tests-18%20Passed%20(JUnit%205%20%2B%20Mockito)-success)
+![React](https://img.shields.io/badge/Frontend-React%2018%20%2B%20Vite-61dafb?logo=react)
+![Tests](https://img.shields.io/badge/Tests-Passing%20(JUnit%205%20%2B%20Mockito)-success)
 
-A modern, production-grade enterprise **Kohort EMS** platform featuring complete CRUD operations, dynamic real-time search, multi-criteria filtering, pagination, CSV reporting, department administration, and stateless JWT authentication.
-
----
-
-## 🌟 Key Features
-
-### Core Capabilities
-- **Full Employee Lifecycle**: Create, view detailed profile, update, and delete employee records with safe confirmation modals.
-- **Dynamic Multi-Field Search**: Real-time server-side search across Employee Name, Email Address, and Employee ID.
-- **Advanced Filtering**: Filter by Department and Employment Status (Active vs. Inactive).
-- **Server-Side Pagination & Sorting**: High-performance SQL pagination with configurable page sizes (5, 10, 25, 50) and column sorting.
-- **CSV Data Export**: Instant download of filtered employee lists formatted for spreadsheet applications.
-- **Department Administration**: Manage company divisions with referential deletion safeguards.
-- **Stateless JWT Security**: BCrypt password hashing, token expiration, and secure role-based authorization.
-- **Swagger / OpenAPI 3.0 Documentation**: Interactive API testing console embedded directly at `/swagger-ui.html`.
-- **Robust Unit Testing**: 100% automated service-layer test suite powered by **JUnit 5** and **Mockito** (18 tests passing).
+A full-stack Employee Management System built with Spring Boot, PostgreSQL (Supabase), and React.
 
 ---
 
-## 🏗️ Architecture
+## 📋 Prerequisites
 
-```
-┌────────────────────────────────────────────────────────┐
-│                   CLIENT (React 18 + Vite)             │
-│   • Pixel-perfect design system with zero CSS bloat    │
-│   • Real-time validation & toast notification engine   │
-│   • Axios interceptors with automatic JWT injection    │
-└───────────────────────────┬────────────────────────────┘
-                            │ RESTful JSON / Bearer JWT
-┌───────────────────────────▼────────────────────────────┐
-│              BACKEND (Spring Boot 3.4.3 / Java 17+)     │
-│   ├── Controllers     (REST API Endpoints)             │
-│   ├── Security        (Spring Security, JWT Filters)   │
-│   ├── Services        (Business logic & CSV stream)    │
-│   ├── Repositories    (Spring Data JPA Specifications) │
-│   └── Config          (OpenAPI / Swagger 3.0)          │
-└───────────────────────────┬────────────────────────────┘
-                            │ JDBC Pool (HikariCP)
-┌───────────────────────────▼────────────────────────────┐
-│              DATABASE (PostgreSQL / Supabase)          │
-│   ├── departments     (Relational foreign keys)        │
-│   ├── employees       (B-Tree search indexes)          │
-│   └── users           (BCrypt hashed credentials)      │
-└────────────────────────────────────────────────────────┘
-```
-
----
-
-## 📋 Technology Stack
-
-| Layer | Technology | Description |
-|---|---|---|
-| **Backend Framework** | Spring Boot 3.4.3 | Latest stable production release |
-| **Language** | Java 17+ (JDK 17, 21, 24 compatible) | Modern standard LTS baseline |
-| **Persistence / ORM** | Spring Data JPA + Hibernate | Automatic schema updates, Specification queries |
-| **Database** | PostgreSQL | Hosted on **Supabase** (Free Tier) or local instance |
-| **Security** | Spring Security 6 + JJWT | Stateless JWT authentication with BCrypt hashing |
-| **Reporting** | OpenCSV 5.9 | High-speed streaming CSV data export |
-| **API Documentation**| Springdoc OpenAPI (Swagger UI) | Interactive API exploration tool |
-| **Testing** | JUnit 5 + Mockito 5 | Service-layer unit test suite |
-| **Frontend Framework**| React 18 + Vite | Rapid HMR, zero-config production bundling |
-| **Styling** | Vanilla CSS Design Tokens | Pixel-perfect typography, borders, and animations |
-| **Icons** | Lucide React | Clean, consistent SVG icon set |
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-Make sure the following tools are installed on your machine:
+Before running the application, make sure the following tools are installed:
 - **Java 17 or higher** (`java -version`)
 - **Node.js 18 or higher** (`node -v` and `npm -v`)
 - **Git**
 
-> *Note: You do **not** need to install Maven globally — the project includes the official Maven Wrapper (`./mvnw` or `mvnw.cmd`).*
+> *Note: Maven is included in the project via the official Maven Wrapper (`./mvnw` or `.\mvnw.cmd`), so you do not need to install Maven globally.*
 
 ---
 
-### Step 1: Database Setup (Supabase Free Tier)
+## 🛠️ Step-by-Step Setup & Installation
 
-1. Go to [supabase.com](https://supabase.com) and create a free account.
-2. Click **New Project**, name it `ems-db`, and set a strong database password.
-3. Once provisioned, navigate to **Project Settings** → **Database** → **Connection string** (URI).
-4. Copy the JDBC connection details:
-   - Host: `aws-0-[region].pooler.supabase.com`
-   - Port: `5432` or `6543`
-   - Database: `postgres`
-   - User: `postgres.[project-ref]`
-   - Password: `[your-db-password]`
+### Step 1: Database Setup (Supabase PostgreSQL)
 
-> **Database Setup Note**: Spring Boot automatically initializes and updates the database schema (`ddl-auto: update`) and automatically seeds the default administrator (`admin` / `admin123`) and company departments on startup via `DataInitializer.java`. For manual database inspection, CI/CD provisioning, or direct execution in the Supabase SQL editor, complete reference scripts are provided in `backend/src/main/resources/schema.sql` (exact table definitions, constraints, and search indices) and `backend/src/main/resources/data.sql` (verified seed credentials and sample departments).
+1. Create a free account at [supabase.com](https://supabase.com).
+2. Click **New Project**, enter a project name (e.g. `kohort-ems`), and set a secure database password.
+3. Once the database is ready, go to **Project Settings** → **Database** → **Connection string** (URI).
+4. Note your connection parameters:
+   - **Host**: `aws-0-[region].pooler.supabase.com`
+   - **Database**: `postgres`
+   - **Port**: `5432` or `6543`
+   - **Username**: `postgres.[your-project-ref]`
+   - **Password**: `[your-database-password]`
+
+> **Automatic Schema & Data Seeding**:
+> When the backend starts up, Spring Boot automatically creates and updates all database tables (`ddl-auto: update`) and seeds the initial administrator account and core departments via `DataInitializer.java`. Reference SQL scripts are also provided in `backend/src/main/resources/schema.sql` and `backend/src/main/resources/data.sql`.
 
 ---
 
-### Step 2: Configure and Run Backend
+### Step 2: Configure Environment Variables
 
-1. Open `backend/src/main/resources/application.yml` (or pass environment variables):
-   ```yaml
-   spring:
-     datasource:
-       url: jdbc:postgresql://YOUR_SUPABASE_HOST:5432/postgres?sslmode=require
-       username: postgres.YOUR_PROJECT_REF
-       password: YOUR_DB_PASSWORD
+1. In the `backend/` directory, copy the example environment file:
+   ```bash
+   # Windows (PowerShell):
+   cp backend/.env.example backend/.env
+
+   # Linux / macOS:
+   cp backend/.env.example backend/.env
    ```
 
-2. Start the backend service using the included Maven Wrapper:
+2. Open `backend/.env` and update it with your Supabase credentials:
+   ```env
+   SPRING_DATASOURCE_URL=jdbc:postgresql://YOUR_SUPABASE_HOST:5432/postgres?sslmode=require
+   SPRING_DATASOURCE_USERNAME=postgres.YOUR_PROJECT_REF
+   SPRING_DATASOURCE_PASSWORD=YOUR_ACTUAL_SUPABASE_PASSWORD
+   JWT_SECRET=kohort_ems_super_secret_jwt_key_that_is_at_least_256_bits_long_2026
+   PORT=8080
+   ```
+
+---
+
+### Step 3: Run the Backend (Spring Boot)
+
+1. Navigate to the `backend` folder and start the application:
    ```bash
    cd backend
 
    # On Windows:
    .\mvnw.cmd spring-boot:run
 
-   # On Linux/macOS:
+   # On Linux / macOS:
    ./mvnw spring-boot:run
    ```
 
-3. The backend starts at `http://localhost:8080`.
-   - **Swagger UI**: Visit `http://localhost:8080/swagger-ui.html`
-   - **Default Admin**: Username: `admin` | Password: `admin123`
+2. The backend server will start at **`http://localhost:8080`**.
+   - **Health Check**: `http://localhost:8080/`
+   - **Interactive Swagger Documentation**: `http://localhost:8080/swagger-ui.html`
 
 ---
 
-### Step 3: Run Frontend
+### Step 4: Run the Frontend (React + Vite)
 
-1. Open a new terminal window:
+1. Open a new terminal window, navigate to the `frontend` folder, and install dependencies:
    ```bash
    cd frontend
    npm install
+   ```
+
+2. Start the local development server:
+   ```bash
    npm run dev
    ```
 
-2. Open your browser and navigate to:
+3. Open your browser and navigate to:
    ```
    http://localhost:5173
    ```
 
-3. Sign in using the default admin credentials (`admin` / `admin123`) or click **Auto-fill Credentials**.
+---
+
+## 🔑 Default Login Credentials
+
+Use the pre-seeded administrator credentials to log in:
+- **Username**: `admin`
+- **Password**: `admin123`
+
+*(You can also click the **Auto-fill Credentials** button on the login screen).*
 
 ---
 
 ## 🧪 Running Automated Unit Tests
 
-To run the complete service-layer test suite:
+To run the backend service-layer unit tests:
+
 ```bash
 cd backend
+
+# On Windows:
 .\mvnw.cmd test
+
+# On Linux / macOS:
+./mvnw test
 ```
-
-### Test Results
-```
-[INFO] Running com.kohort.ems.service.DepartmentServiceTest
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
-[INFO] Running com.kohort.ems.service.EmployeeServiceTest
-[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0
-[INFO] Running com.kohort.ems.EmsApplicationTests
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS (17 tests passed)
-```
-
----
-
-## 📡 REST API Reference
-
-### Authentication (`/api/auth`)
-| Method | Endpoint | Description | Public? |
-|---|---|---|---|
-| `POST` | `/api/auth/login` | Authenticate and obtain JWT Bearer token | Yes |
-| `POST` | `/api/auth/register` | Register new admin account | Yes |
-
-### Employees (`/api/employees`)
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| `GET` | `/api/employees` | List employees (paginated, searchable, filterable) | Bearer Token |
-| `GET` | `/api/employees/{id}` | Get employee by ID | Bearer Token |
-| `POST` | `/api/employees` | Create a new employee | Bearer Token |
-| `PUT` | `/api/employees/{id}` | Update employee by ID | Bearer Token |
-| `DELETE` | `/api/employees/{id}` | Delete employee by ID | Bearer Token |
-| `GET` | `/api/employees/export/csv` | Download filtered employees as CSV file | Bearer Token |
-
-### Departments (`/api/departments`)
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| `GET` | `/api/departments` | List all departments with staff count | Bearer Token |
-| `GET` | `/api/departments/{id}` | Get department by ID | Bearer Token |
-| `POST` | `/api/departments` | Create new department | Bearer Token |
-| `PUT` | `/api/departments/{id}` | Update existing department | Bearer Token |
-| `DELETE` | `/api/departments/{id}` | Delete department (guarded against active staff) | Bearer Token |
 
 ---
 
 ## 📬 Postman Collection
 
-The repository includes a ready-to-import Postman collection:
-- File location: `postman/Employee_Management_System.postman_collection.json`
-- **How to use**:
-  1. Open Postman.
-  2. Click **Import** and select the file.
-  3. Run the **Login (Admin)** request first — it automatically saves the JWT token into the collection's `{{token}}` variable.
-  4. Test all subsequent requests immediately.
+A pre-configured Postman collection is included in the repository at:
+- `postman/Employee_Management_System.postman_collection.json`
 
----
-
-## 🌐 Free Tier Production Hosting Recommendations
-
-| Service | Recommended Platform | Plan |
-|---|---|---|
-| **Database** | [Supabase](https://supabase.com) | Free Tier (500 MB storage, PostgreSQL 16) |
-| **Backend API** | [Render](https://render.com) or [Railway](https://railway.app) | Free Web Service |
-| **Frontend** | [Vercel](https://vercel.com) or [Netlify](https://netlify.com) | Free Forever Global Edge CDN |
-
----
-
-## 📁 Repository Structure
-
-```
-kohort/
-├── backend/
-│   ├── src/main/java/com/kohort/ems/
-│   │   ├── config/              # OpenAPI / Swagger configuration
-│   │   ├── controller/          # REST Controllers (Auth, Employee, Department)
-│   │   ├── dto/                 # Request & Response Data Transfer Objects
-│   │   ├── exception/           # Custom exceptions & GlobalExceptionHandler
-│   │   ├── model/               # JPA Entities (Employee, Department, User)
-│   │   ├── repository/          # Spring Data Repositories & Specifications
-│   │   ├── security/            # JWT Token Provider, Filters, SecurityConfig
-│   │   ├── service/             # Business Logic & OpenCSV Exporter
-│   │   └── EmsApplication.java  # Main application entry point
-│   ├── src/main/resources/
-│   │   ├── application.yml      # App configuration
-│   │   ├── schema.sql           # PostgreSQL schema script
-│   │   └── data.sql             # Production seed data
-│   ├── src/test/java/           # JUnit 5 & Mockito test suites
-│   ├── pom.xml                  # Maven build descriptor
-│   └── mvnw.cmd                 # Maven Wrapper for Windows/Linux
-├── frontend/
-│   ├── src/
-│   │   ├── api/                 # Axios clients (auth, employees, departments)
-│   │   ├── components/          # Reusable UI (Navbar, Modal, Badge, Pagination)
-│   │   ├── context/             # Auth & Toast notification state
-│   │   ├── pages/               # Views (List, Add/Edit Form, Details, Departments, Login)
-│   │   ├── index.css            # Handcrafted CSS design system
-│   │   ├── App.jsx              # Routing & Protected layout
-│   │   └── main.jsx
-│   ├── package.json
-│   └── vite.config.js
-├── postman/
-│   └── Employee_Management_System.postman_collection.json
-├── README.md
-└── .gitignore
-```
+**How to test:**
+1. Open Postman → Click **Import** → Choose the collection file.
+2. Execute the **Login (Admin)** request first — it automatically sets the authorization token for all subsequent requests.
+3. Test any employee or department endpoint.

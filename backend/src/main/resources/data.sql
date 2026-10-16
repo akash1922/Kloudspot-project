@@ -21,21 +21,27 @@ VALUES
     ('admin', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'ROLE_ADMIN')
 ON CONFLICT (username) DO NOTHING;
 
--- 3. Initial Sample Employees (with valid Indian +91 98xxxxxxxx phone numbers)
+-- 3. Initial Sample Employees (with valid Indian +91 phone numbers)
 INSERT INTO employees (employee_id, full_name, email, phone_number, department_id, designation, date_of_joining, salary, status, archived)
 SELECT 
-    'EMP-1001', 'Alexander Wright', 'alexander.wright@company.com', '+91 9823456781', id, 'Lead Software Architect', '2022-03-15', 135000.00, 'Active', false
+    'EMP-1001', 'AKASH', 'amanthesillent@gmail.com', '+91 9079672366', id, 'Computer Application', '2022-03-15', 135000.00, 'Active', false
 FROM departments WHERE name = 'Engineering'
 ON CONFLICT (employee_id) DO NOTHING;
 
 INSERT INTO employees (employee_id, full_name, email, phone_number, department_id, designation, date_of_joining, salary, status, archived)
 SELECT 
-    'EMP-1002', 'Elena Rostova', 'elena.rostova@company.com', '+91 9834567892', id, 'Principal Product Designer', '2022-06-01', 118000.00, 'Active', false
+    'EMP-1002', 'Tarun', 'tarun@gmail.com', '+91 9834567892', id, 'Principal Product Designer', '2022-06-01', 118000.00, 'Active', false
 FROM departments WHERE name = 'Product & Design'
 ON CONFLICT (employee_id) DO NOTHING;
 
 INSERT INTO employees (employee_id, full_name, email, phone_number, department_id, designation, date_of_joining, salary, status, archived)
 SELECT 
-    'EMP-1003', 'Marcus Chen', 'marcus.chen@company.com', '+91 9845678903', id, 'Senior Backend Engineer', '2023-01-10', 105000.00, 'Active', false
+    'EMP-1003', 'Tushar', 'tushar@gmail.com', '+91 9845678903', id, 'Senior Backend Engineer', '2023-01-10', 105000.00, 'Active', false
+FROM departments WHERE name = 'Engineering'
+ON CONFLICT (employee_id) DO NOTHING;
+
+INSERT INTO employees (employee_id, full_name, email, phone_number, department_id, designation, date_of_joining, salary, status, archived)
+SELECT 
+    'EMP-1005', 'Lalan', 'lalan@gmail.com', '+91 9867890125', id, 'DevOps Engineer', '2023-08-14', 98000.00, 'Inactive', false
 FROM departments WHERE name = 'Engineering'
 ON CONFLICT (employee_id) DO NOTHING;
